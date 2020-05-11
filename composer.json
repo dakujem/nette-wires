@@ -1,0 +1,25 @@
+{
+  "name": "dakujem/nette-wires",
+  "description": "Wire in Nette with genie powers.",
+  "license": "Unlicense",
+  "authors": [
+    {
+      "name": "Andrej Rypák",
+      "email": "xrypak@gmail.com"
+    }
+  ],
+  "require": {
+    "php": ">=7.2",
+    "dakujem/wire-genie": "^1"
+  },
+  "require-dev": {
+    "contributte/psr11-container-interface": "^0.4.1 || ^0.3"
+  },
+  "minimum-stability": "dev",
+  "prefer-stable": true,
+  "autoload": {
+    "psr-4": {
+      "Dakujem\\": "src/"
+    }
+  }
+}
