@@ -94,7 +94,6 @@ Lokalne zavislosti z prezenteru je mozne pribalit cez anonymne funkcie:
                 );
             });
     }
-
 ```
 
 Tento postup umoznuje vyhnut sa injektovaniu mnozstva zavislosti do prezenterov,
@@ -102,7 +101,8 @@ pokial nie su vzdy pouzivane
 (prezetner moze mat viacero akcii, pouzije sa len jedna; komponenty detto).
 
 Taketo pouzitie Wire Genie riesi okrajovy pripad, kedy vznika boilerplate.\
-Pred pouzitim skuste pouvazovat, ci sa vas pripad neda vyriesit cistejsie.
+Pred pouzitim skuste pouvazovat, ci sa vas pripad neda vyriesit cistejsie.\
+Nette 3 podporuje injektovanie skupin sluzieb, `SearchExtension` umoznuje hromadne registrovat sluzby do kontajneru, atd.
 
 Porovnajte vyhody a nevyhody:
 - ❔ zachovanie IoC je otazne (zalezi na uhle pohladu)
@@ -118,6 +118,8 @@ Porovnajte vyhody a nevyhody:
 
 
 > Alternativne mozete skusit iny kompromis, napr. [Kdyby/Autowired](https://github.com/Kdyby/Autowired).
+
+Osobne odporucam tieto techniky pouzivat len vo faze prototypovania.
 
 
 ## EN
@@ -135,8 +137,71 @@ Metapackage.
 > But then again, if you can `get` a service from your container, you can use wire genie.
 
 
-🚧 To be done.
+#### Installation
 
+> 💿 `composer require dakujem/nette-wires`
 
+Then either install [Contributte/PSR-11-kontajner](https://github.com/contributte/psr11-container-interface)
+or any other PSR-11 wrapper for Nette DI container.
+
+If you install `contributte/psr11-container-interface`,
+you can use
+[`WireGenieTrait`](src/WireGenieTrait.php),
+in your presenter(s), that will add `wire` method.
+> `composer require contributte/psr11-container-interface`
+
+```php
+namespace App\Presenters;
+
+use Dakujem\WireGenieTrait;
+use Nette;
+
+abstract class BasePresenter extends Nette\Application\UI\Presenter
+{
+    use WireGenieTrait;
+}
+```
 > 💡 Do not use _traits_ unless you understand what's wrong with them.
 
+Otherwise, implementation of `wire` method is in your hands.\
+You can of course call `$wireGenie->provide( ... )->invoke( ... )` directly as well.
+
+Then you can wire dependencies without first labourously injecting them to your presenters,
+creating factories and accessors in the meantime.
+
+```php
+    protected function createComponentFoobarForm()
+    {
+        $factory = function (InputFactory $inputs, TextRepository $textRepo) {
+            $form = new Form();
+            $form->addComponent(
+                $inputs->create('stuff', $textRepo->getAllUnread()),
+                'unread_stuff'
+            );
+            // ...
+            return $form;
+        };
+        return $this->wire(InputFactory::class, 'model.repository.text')->invoke($factory);
+    }
+```
+
+Local dependencies can naturally be passed to the closures:
+```php
+    protected function createComponentFoobarForm()
+    {
+        return $this->wire(InputFactory::class, 'model.repository.text')
+            ->invoke(function (...$deps) {
+                return (new FoobarFormFactory)->create(
+                    $this->localDependency,
+                    $this->getParameter('id'),
+                    ...$deps
+                );
+            });
+    }
+```
+
+Please understand that this approach has its advantages and disadvantages.
+It might actually degrade your aplication if misused.\
+First try to think if your case can not be solved in a cleaner way.\
+
+I would recommend only using this and similar approaches during prototyping phase.
