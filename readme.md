@@ -112,7 +112,7 @@ Porovnajte vyhody a nevyhody:
 - ➕ testovatelnost je jednoduchsia ako v priapde tovarni vygenerovanych DI
 - ➕ prezenter neriesi, odkial zavislosti tecu, ale _deklaruje_, ake sluzby sa maju nadrotovat
 - ➕ lazy loading v momente realneho pouzitia
-- ➖ ziaden autowiring
+- ➖ ~~ziaden autowiring~~ autowiring je mozne jednoducho implementovat, vid [strucny navod v balicku](https://github.com/dakujem/wire-genie#automatic-dependency-resolution)
 - ➖ „maskovany“ service lokator (❔)
 - ➖ kontajner pri kompilacii nezisti problemy s chybajucimi alebo konfliktnymi sluzbami
 
