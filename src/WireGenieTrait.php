@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Dakujem;
 
 use Contributte\Psr11\Container as Psr11Container;
@@ -28,12 +30,18 @@ trait WireGenieTrait
      *   };
      *   $service = $this->wire( ...dependency-identifier-list... )->invoke($factoryFunction);
      *
+     * ... OR with automatic dependency resolution (omit arguments):
+     *   $service = $this->wire()->invoke($factoryFunction);
+     *
      * @param mixed ...$args
-     * @return InvokableProvider
+     * @return callable|WireInvoker|InvokableProvider
      */
-    protected function wire(...$args): callable
+    public function wire(...$args): callable
     {
-        return $this->wireGenie->provide(...$args);
+        if ($args !== []) {
+            return $this->wireGenie->provide(...$args);
+        }
+        return WireInvoker::employ($this->wireGenie);
     }
 
     public function injectWireGenie(NetteContainer $dic): void

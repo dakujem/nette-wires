@@ -10,7 +10,7 @@
   ],
   "require": {
     "php": ">=7.2",
-    "dakujem/wire-genie": "^1"
+    "dakujem/wire-genie": "^1.1"
   },
   "require-dev": {
     "contributte/psr11-container-interface": "^0.4.1 || ^0.3"

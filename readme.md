@@ -2,8 +2,9 @@
 
 > 💿 `composer require dakujem/nette-wires`
 
+- [EN version](#en-)
 
-## SK / CS
+## SK ![sk_SK](https://www.countryflags.io/sk/flat/32.png) / CS ![cs_CZ](https://www.countryflags.io/cz/flat/24.png)
 
 Wire Genie umoznuje redukovat "boilerplate" kod suvisiaci s drotovanim sluzieb
 cez prezentery (napriklad vytvaranie komponent
@@ -68,7 +69,12 @@ Metodu `wire` je mozne pouzit napriklad v `createComponent*` metodach:
             // ...
             return $form;
         };
+
+        // explicitne vyziadanie zavislosti
         return $this->wire(InputFactory::class, 'model.repository.text')->invoke($factory);
+        
+        // alebo automaticke nadrotovanie zavislosti (autowiring)
+        return $this->wire()->invoke($factory);
     }
 ```
 
@@ -108,11 +114,11 @@ Porovnajte vyhody a nevyhody:
 - ❔ zachovanie IoC je otazne (zalezi na uhle pohladu)
 - ➕ vyhodou je mala pracnost riesenia
 - ➕ prehladne prepojenie zavislosti, jednoduche na pochopenie
+- ➕ autowiring, vid detaily [v balicku Wire Genie](https://github.com/dakujem/wire-genie#automatic-dependency-resolution)
 - ➕ moznost konfiguracie drotovania zavislosti existuje
 - ➕ testovatelnost je jednoduchsia ako v priapde tovarni vygenerovanych DI
 - ➕ prezenter neriesi, odkial zavislosti tecu, ale _deklaruje_, ake sluzby sa maju nadrotovat
 - ➕ lazy loading v momente realneho pouzitia
-- ➖ ~~ziaden autowiring~~ autowiring je mozne jednoducho implementovat, vid [strucny navod v balicku](https://github.com/dakujem/wire-genie#automatic-dependency-resolution)
 - ➖ „maskovany“ service lokator (❔)
 - ➖ kontajner pri kompilacii nezisti problemy s chybajucimi alebo konfliktnymi sluzbami
 
@@ -122,7 +128,7 @@ Porovnajte vyhody a nevyhody:
 Osobne odporucam tieto techniky pouzivat len vo faze prototypovania.
 
 
-## EN
+## EN ![en_GB](https://www.countryflags.io/gb/flat/32.png)
 
 Allows to fetch multiple dependencies from a DI container
 and provide them as arguments to a callable.\
@@ -181,7 +187,12 @@ creating factories and accessors in the meantime.
             // ...
             return $form;
         };
+
+        // with explicit dependencies
         return $this->wire(InputFactory::class, 'model.repository.text')->invoke($factory);
+        
+        // with automatic dependency resolution (autowiring)
+        return $this->wire()->invoke($factory);
     }
 ```
 
